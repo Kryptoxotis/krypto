@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { QuizQuestion, QuizResult } from '../types';
 import { generateQuiz } from '../lib/quiz';
-import { processReview, getMixedQueue } from '../lib/srs';
+import { processReview, getMixedQueue, getPracticeQueue, processPracticeReview } from '../lib/srs';
 import { saveQuizResult } from '../lib/storage';
 
 interface QuizState {
@@ -10,6 +10,7 @@ interface QuizState {
   answers: Map<string, { answer: string; correct: boolean; timeMs: number }>;
   isComplete: boolean;
   isLoading: boolean;
+  isPracticeMode: boolean;
 }
 
 export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
@@ -19,17 +20,22 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
     answers: new Map(),
     isComplete: false,
     isLoading: false,
+    isPracticeMode: false,
   });
 
   const questionStartTime = useRef<number>(0);
   const quizStartTime = useRef<number>(0);
+  const practiceWeightRef = useRef<number>(0.5);
 
-  const startQuiz = useCallback(async (quizSize: number = 10) => {
+  const startQuiz = useCallback(async (quizSize: number = 10, practiceMode: boolean = false, practiceWeight: number = 0.5) => {
     setState(prev => ({ ...prev, isLoading: true }));
+    practiceWeightRef.current = practiceWeight;
 
     try {
-      // Get items from SRS queue
-      const srsItems = await getMixedQueue(itemType, quizSize, 0.3);
+      // Get items from SRS queue (regular) or all items (practice mode)
+      const srsItems = practiceMode
+        ? await getPracticeQueue(itemType, quizSize)
+        : await getMixedQueue(itemType, quizSize, 0.3);
 
       if (srsItems.length === 0) {
         setState(prev => ({
@@ -37,6 +43,7 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
           isLoading: false,
           questions: [],
           isComplete: true,
+          isPracticeMode: practiceMode,
         }));
         return;
       }
@@ -50,6 +57,7 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
         answers: new Map(),
         isComplete: false,
         isLoading: false,
+        isPracticeMode: practiceMode,
       });
 
       questionStartTime.current = Date.now();
@@ -67,8 +75,12 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
     const responseTimeMs = Date.now() - questionStartTime.current;
     const isCorrect = answer === currentQuestion.correctAnswer;
 
-    // Update SRS
-    await processReview(currentQuestion.relatedItemId, isCorrect, responseTimeMs);
+    // Update SRS (use practice mode or regular mode)
+    if (state.isPracticeMode) {
+      await processPracticeReview(currentQuestion.relatedItemId, isCorrect, responseTimeMs, practiceWeightRef.current);
+    } else {
+      await processReview(currentQuestion.relatedItemId, isCorrect, responseTimeMs);
+    }
 
     // Save result
     const result: QuizResult = {
@@ -95,7 +107,7 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
     }));
 
     return isCorrect;
-  }, [state.questions, state.currentIndex, state.answers]);
+  }, [state.questions, state.currentIndex, state.answers, state.isPracticeMode]);
 
   const nextQuestion = useCallback(() => {
     const nextIndex = state.currentIndex + 1;
@@ -142,6 +154,7 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
       answers: new Map(),
       isComplete: false,
       isLoading: false,
+      isPracticeMode: false,
     });
   }, []);
 
@@ -151,6 +164,7 @@ export function useQuiz(itemType: 'letter' | 'noun-ending' | 'verb-ending') {
     currentQuestion: getCurrentQuestion(),
     isComplete: state.isComplete,
     isLoading: state.isLoading,
+    isPracticeMode: state.isPracticeMode,
     answers: state.answers,
     startQuiz,
     submitAnswer,

@@ -72,6 +72,12 @@ const defaultSettings: UserSettings = {
   hapticFeedback: true,
   showPhoneticGuide: true,
   quizSize: 10,
+  mastery: {
+    minReviews: 5,
+    minAccuracy: 80,
+    minInterval: 7,
+    practiceWeight: 0.5,
+  },
 };
 
 // Default progress

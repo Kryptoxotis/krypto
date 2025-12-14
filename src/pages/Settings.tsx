@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button, Card } from '../components/ui';
-import { useSettings } from '../hooks/useSettings';
+import { useSettings, defaultMasterySettings } from '../hooks/useSettings';
 import { useProgress } from '../hooks/useProgress';
 import { exportAllData, importAllData } from '../lib/storage';
 import styles from './Settings.module.css';
 
 export function Settings() {
-  const { settings, toggleDarkMode, togglePhoneticGuide, setQuizSize } = useSettings();
+  const { settings, toggleDarkMode, togglePhoneticGuide, setQuizSize, updateMastery, resetMasteryToDefaults } = useSettings();
   const { resetAll } = useProgress();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
@@ -107,6 +107,103 @@ export function Settings() {
                 </button>
               ))}
             </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Mastery Settings</h2>
+
+        <div className={styles.masteryInfo}>
+          <h3>How Mastery Works</h3>
+          <p>A letter or item is considered "mastered" when ALL of these conditions are met:</p>
+          <ul>
+            <li>Reviewed at least <strong>{settings.mastery?.minReviews ?? defaultMasterySettings.minReviews} times</strong></li>
+            <li>Accuracy of <strong>{settings.mastery?.minAccuracy ?? defaultMasterySettings.minAccuracy}%</strong> or higher</li>
+            <li>SRS interval of at least <strong>{settings.mastery?.minInterval ?? defaultMasterySettings.minInterval} days</strong></li>
+          </ul>
+          <p>Adjust these values below to make mastery easier or harder.</p>
+        </div>
+
+        <Card variant="default" padding="none">
+          <div className={styles.settingItem}>
+            <div className={styles.settingInfo}>
+              <span className={styles.settingLabel}>Minimum Reviews</span>
+              <span className={styles.settingDesc}>Reviews needed before mastery possible</span>
+            </div>
+            <div className={styles.sliderContainer}>
+              <span className={styles.sliderValue}>{settings.mastery?.minReviews ?? defaultMasterySettings.minReviews}</span>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={settings.mastery?.minReviews ?? defaultMasterySettings.minReviews}
+                onChange={(e) => updateMastery({ minReviews: parseInt(e.target.value) })}
+                className={styles.slider}
+              />
+            </div>
+          </div>
+
+          <div className={styles.settingItem}>
+            <div className={styles.settingInfo}>
+              <span className={styles.settingLabel}>Minimum Accuracy</span>
+              <span className={styles.settingDesc}>Required accuracy percentage</span>
+            </div>
+            <div className={styles.sliderContainer}>
+              <span className={styles.sliderValue}>{settings.mastery?.minAccuracy ?? defaultMasterySettings.minAccuracy}%</span>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                step="5"
+                value={settings.mastery?.minAccuracy ?? defaultMasterySettings.minAccuracy}
+                onChange={(e) => updateMastery({ minAccuracy: parseInt(e.target.value) })}
+                className={styles.slider}
+              />
+            </div>
+          </div>
+
+          <div className={styles.settingItem}>
+            <div className={styles.settingInfo}>
+              <span className={styles.settingLabel}>Minimum Interval</span>
+              <span className={styles.settingDesc}>Days between reviews for mastery</span>
+            </div>
+            <div className={styles.sliderContainer}>
+              <span className={styles.sliderValue}>{settings.mastery?.minInterval ?? defaultMasterySettings.minInterval} days</span>
+              <input
+                type="range"
+                min="1"
+                max="30"
+                value={settings.mastery?.minInterval ?? defaultMasterySettings.minInterval}
+                onChange={(e) => updateMastery({ minInterval: parseInt(e.target.value) })}
+                className={styles.slider}
+              />
+            </div>
+          </div>
+
+          <div className={styles.settingItem}>
+            <div className={styles.settingInfo}>
+              <span className={styles.settingLabel}>Practice Weight</span>
+              <span className={styles.settingDesc}>How much practice counts toward stats</span>
+            </div>
+            <div className={styles.sliderContainer}>
+              <span className={styles.sliderValue}>{Math.round((settings.mastery?.practiceWeight ?? defaultMasterySettings.practiceWeight) * 100)}%</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="10"
+                value={(settings.mastery?.practiceWeight ?? defaultMasterySettings.practiceWeight) * 100}
+                onChange={(e) => updateMastery({ practiceWeight: parseInt(e.target.value) / 100 })}
+                className={styles.slider}
+              />
+            </div>
+          </div>
+
+          <div className={styles.resetDefaultsBtn}>
+            <Button variant="ghost" size="sm" onClick={resetMasteryToDefaults}>
+              Reset to Defaults
+            </Button>
           </div>
         </Card>
       </section>

@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { UserSettings } from '../types';
+import type { UserSettings, MasterySettings } from '../types';
 import { getSettings, updateSettings } from '../lib/storage';
+
+export const defaultMasterySettings: MasterySettings = {
+  minReviews: 5,
+  minAccuracy: 80,
+  minInterval: 7,
+  practiceWeight: 0.5,
+};
 
 const defaultSettings: UserSettings = {
   darkMode: true,
@@ -8,6 +15,7 @@ const defaultSettings: UserSettings = {
   hapticFeedback: true,
   showPhoneticGuide: true,
   quizSize: 10,
+  mastery: defaultMasterySettings,
 };
 
 export function useSettings() {
@@ -68,6 +76,19 @@ export function useSettings() {
     return update({ quizSize: size });
   }, [update]);
 
+  const updateMastery = useCallback((partial: Partial<MasterySettings>) => {
+    return update({
+      mastery: {
+        ...settings.mastery,
+        ...partial,
+      },
+    });
+  }, [settings.mastery, update]);
+
+  const resetMasteryToDefaults = useCallback(() => {
+    return update({ mastery: defaultMasterySettings });
+  }, [update]);
+
   return {
     settings,
     isLoading,
@@ -77,5 +98,7 @@ export function useSettings() {
     toggleHapticFeedback,
     togglePhoneticGuide,
     setQuizSize,
+    updateMastery,
+    resetMasteryToDefaults,
   };
 }

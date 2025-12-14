@@ -1,5 +1,13 @@
-import type { SRSItem } from '../types';
+import type { SRSItem, MasterySettings } from '../types';
 import { getSRSItem, saveSRSItem, getDueItems, getSRSItemsByType } from './storage';
+
+// Default mastery settings (used when no settings provided)
+const DEFAULT_MASTERY: MasterySettings = {
+  minReviews: 5,
+  minAccuracy: 80,
+  minInterval: 7,
+  practiceWeight: 0.5,
+};
 
 /**
  * SM-2 Algorithm Implementation for Spaced Repetition
@@ -142,30 +150,35 @@ export async function getNewItems(
 
 /**
  * Calculate mastery percentage for a set of items
- * An item is "mastered" if:
- * - Has at least 5 reviews
- * - Has 80%+ accuracy
- * - Current interval is at least 7 days
+ * An item is "mastered" if it meets all configurable criteria:
+ * - Has at least minReviews reviews
+ * - Has minAccuracy% or higher accuracy
+ * - Current interval is at least minInterval days
  */
-export function isMastered(item: SRSItem): boolean {
-  if (item.totalReviews < 5) return false;
-  const accuracy = item.correctReviews / item.totalReviews;
-  if (accuracy < 0.8) return false;
-  if (item.interval < 7) return false;
+export function isMastered(item: SRSItem, settings?: MasterySettings): boolean {
+  const { minReviews, minAccuracy, minInterval } = settings || DEFAULT_MASTERY;
+
+  if (item.totalReviews < minReviews) return false;
+  const accuracy = (item.correctReviews / item.totalReviews) * 100;
+  if (accuracy < minAccuracy) return false;
+  if (item.interval < minInterval) return false;
   return true;
 }
 
 /**
  * Calculate if an item is "learning" (started but not mastered)
  */
-export function isLearning(item: SRSItem): boolean {
-  return item.totalReviews > 0 && !isMastered(item);
+export function isLearning(item: SRSItem, settings?: MasterySettings): boolean {
+  return item.totalReviews > 0 && !isMastered(item, settings);
 }
 
 /**
  * Get learning statistics for a type of item
  */
-export async function getLearningStats(type: 'letter' | 'noun-ending' | 'verb-ending'): Promise<{
+export async function getLearningStats(
+  type: 'letter' | 'noun-ending' | 'verb-ending',
+  masterySettings?: MasterySettings
+): Promise<{
   total: number;
   mastered: number;
   learning: number;
@@ -186,7 +199,7 @@ export async function getLearningStats(type: 'letter' | 'noun-ending' | 'verb-en
   for (const item of items) {
     if (item.totalReviews === 0) {
       notStarted++;
-    } else if (isMastered(item)) {
+    } else if (isMastered(item, masterySettings)) {
       mastered++;
     } else {
       learning++;
@@ -234,4 +247,59 @@ export async function getMixedQueue(
   }
 
   return combined;
+}
+
+/**
+ * Get all items for unlimited practice mode (ignores due dates)
+ */
+export async function getPracticeQueue(
+  type?: 'letter' | 'noun-ending' | 'verb-ending',
+  limit?: number
+): Promise<SRSItem[]> {
+  const items = type ? await getSRSItemsByType(type) : await getDueItems();
+
+  // Shuffle for variety
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return limit ? shuffled.slice(0, limit) : shuffled;
+}
+
+/**
+ * Process a practice review (counts toward stats with configurable weight)
+ * Unlike regular reviews, practice doesn't affect SRS scheduling
+ */
+export async function processPracticeReview(
+  itemId: string,
+  correct: boolean,
+  responseTimeMs: number,
+  practiceWeight: number = 0.5
+): Promise<SRSItem | null> {
+  const item = await getSRSItem(itemId);
+  if (!item) return null;
+
+  // Apply weighted stats - practice counts but less than regular reviews
+  const weightedReview = practiceWeight;
+  const weightedCorrect = correct ? practiceWeight : 0;
+
+  item.totalReviews += weightedReview;
+  item.correctReviews += weightedCorrect;
+
+  // Update average response time
+  const totalWeight = item.totalReviews;
+  if (totalWeight > 0) {
+    item.averageResponseTime =
+      (item.averageResponseTime * (totalWeight - weightedReview) + responseTimeMs * weightedReview) / totalWeight;
+  }
+
+  item.lastReviewDate = Date.now();
+
+  // Practice mode does NOT update interval, nextReviewDate, repetitions, or easeFactor
+  // This allows unlimited practice without messing up the SRS schedule
+
+  await saveSRSItem(item);
+  return item;
 }

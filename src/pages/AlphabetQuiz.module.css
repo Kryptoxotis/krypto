@@ -72,6 +72,17 @@
   margin-top: var(--spacing-4);
 }
 
+.practiceNote {
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--color-accent-secondary);
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-4);
+  width: 100%;
+}
+
 /* Quiz Header */
 .quizHeader {
   display: flex;

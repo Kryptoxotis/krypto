@@ -116,6 +116,14 @@ export interface UserProgress {
   updatedAt: number;
 }
 
+// Mastery Settings
+export interface MasterySettings {
+  minReviews: number;        // Minimum reviews for mastery (default 5)
+  minAccuracy: number;       // Minimum accuracy % for mastery (default 80)
+  minInterval: number;       // Minimum interval in days for mastery (default 7)
+  practiceWeight: number;    // How much practice counts toward stats (0-1, default 0.5)
+}
+
 // Settings Types
 export interface UserSettings {
   darkMode: boolean;
@@ -123,6 +131,7 @@ export interface UserSettings {
   hapticFeedback: boolean;
   showPhoneticGuide: boolean;
   quizSize: number; // Number of questions per quiz
+  mastery: MasterySettings;
 }
 
 // Database Schema Types

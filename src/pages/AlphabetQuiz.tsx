@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, OptionButton, ProgressBar, Card } from '../components/ui';
 import { useQuiz } from '../hooks/useQuiz';
 import { useProgress } from '../hooks/useProgress';
-import { useSettings } from '../hooks/useSettings';
+import { useSettings, defaultMasterySettings } from '../hooks/useSettings';
 import { getLetterById } from '../data/alphabet';
 import styles from './AlphabetQuiz.module.css';
 
@@ -12,12 +12,15 @@ type QuizPhase = 'ready' | 'quiz' | 'feedback' | 'results';
 
 export function AlphabetQuiz() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isPracticeMode = searchParams.get('mode') === 'practice';
   const { settings } = useSettings();
   const { refreshProgress, incrementQuizCount } = useProgress();
   const {
     currentQuestion,
     isComplete,
     isLoading,
+    isPracticeMode: quizIsPractice,
     progress: quizProgress,
     startQuiz,
     submitAnswer,
@@ -37,7 +40,8 @@ export function AlphabetQuiz() {
   }, [isComplete]);
 
   const handleStart = async () => {
-    await startQuiz(settings.quizSize);
+    const practiceWeight = settings.mastery?.practiceWeight ?? defaultMasterySettings.practiceWeight;
+    await startQuiz(settings.quizSize, isPracticeMode, practiceWeight);
     setPhase('quiz');
   };
 
@@ -97,9 +101,14 @@ export function AlphabetQuiz() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className={styles.readyIcon}>Αα</div>
-          <h1 className={styles.readyTitle}>Alphabet Quiz</h1>
+          <h1 className={styles.readyTitle}>
+            {isPracticeMode ? 'Practice Mode' : 'Alphabet Quiz'}
+          </h1>
           <p className={styles.readyDesc}>
-            Test your knowledge of the Greek alphabet with {settings.quizSize} questions
+            {isPracticeMode
+              ? `Practice any letter freely with ${settings.quizSize} questions. Stats count at ${Math.round((settings.mastery?.practiceWeight ?? defaultMasterySettings.practiceWeight) * 100)}% weight.`
+              : `Test your knowledge of the Greek alphabet with ${settings.quizSize} questions`
+            }
           </p>
           <div className={styles.quizTypes}>
             <div className={styles.quizType}>
@@ -115,6 +124,11 @@ export function AlphabetQuiz() {
               <span>Match cases</span>
             </div>
           </div>
+          {isPracticeMode && (
+            <div className={styles.practiceNote}>
+              Practice mode ignores SRS scheduling - drill any letter anytime!
+            </div>
+          )}
           <Button
             variant="primary"
             size="lg"
@@ -122,7 +136,7 @@ export function AlphabetQuiz() {
             onClick={handleStart}
             isLoading={isLoading}
           >
-            Start Quiz
+            {isPracticeMode ? 'Start Practice' : 'Start Quiz'}
           </Button>
           <Button
             variant="ghost"
@@ -156,6 +170,12 @@ export function AlphabetQuiz() {
           <h1 className={styles.resultTitle}>
             {isPerfect ? 'Perfect!' : isGood ? 'Great Job!' : 'Keep Practicing!'}
           </h1>
+
+          {quizIsPractice && (
+            <div className={styles.practiceNote}>
+              Practice Mode - Stats counted at {Math.round((settings.mastery?.practiceWeight ?? defaultMasterySettings.practiceWeight) * 100)}% weight
+            </div>
+          )}
 
           <Card variant="elevated" padding="lg" className={styles.resultCard}>
             <div className={styles.resultStats}>

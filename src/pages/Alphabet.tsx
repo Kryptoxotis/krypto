@@ -168,6 +168,14 @@ export function Alphabet() {
         >
           Start Quiz
         </Button>
+        <Button
+          variant="secondary"
+          size="lg"
+          fullWidth
+          onClick={() => navigate('/alphabet/quiz?mode=practice')}
+        >
+          Unlimited Practice
+        </Button>
       </div>
     </div>
   );
