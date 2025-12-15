@@ -67,7 +67,11 @@ export function AlphabetQuiz() {
   };
 
   const handleQuizComplete = async () => {
-    await incrementQuizCount();
+    const results = getResults();
+    // Only increment quiz count if there were actual questions answered
+    if (results.totalQuestions > 0) {
+      await incrementQuizCount();
+    }
     await refreshProgress();
     setPhase('results');
   };
