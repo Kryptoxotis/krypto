@@ -11,6 +11,7 @@
 
 .header h1 {
   font-size: var(--font-size-2xl);
+  font-weight: 700;
 }
 
 .section {
@@ -18,11 +19,11 @@
 }
 
 .sectionTitle {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-accent-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   margin-bottom: var(--spacing-3);
   padding-left: var(--spacing-2);
 }
@@ -32,7 +33,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .settingItem:last-child {
@@ -46,45 +47,47 @@
 }
 
 .settingLabel {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-primary);
 }
 
 .settingDesc {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
 /* Toggle Switch */
 .toggle {
   position: relative;
-  width: 48px;
-  height: 28px;
+  width: 52px;
+  height: 30px;
   background: var(--color-bg-tertiary);
   border-radius: var(--radius-full);
   border: none;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: all var(--transition-normal);
 }
 
 .toggle.active {
-  background: var(--color-accent-secondary);
+  background: var(--gradient-secondary);
+  box-shadow: var(--shadow-glow-violet);
 }
 
 .toggleThumb {
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 3px;
+  left: 3px;
   width: 24px;
   height: 24px;
   background: white;
   border-radius: 50%;
-  transition: transform var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal);
+  box-shadow: var(--shadow-md);
 }
 
 .toggle.active .toggleThumb {
-  transform: translateX(20px);
+  transform: translateX(22px);
 }
 
 /* Quiz Size Options */
@@ -94,21 +97,26 @@
 }
 
 .sizeOption {
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-4);
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-normal);
+}
+
+.sizeOption:hover {
+  border-color: var(--color-accent-secondary);
 }
 
 .sizeOption.active {
-  background: var(--color-accent-secondary);
-  border-color: var(--color-accent-secondary);
+  background: var(--gradient-secondary);
+  border-color: transparent;
   color: white;
+  box-shadow: var(--shadow-glow-violet);
 }
 
 /* Import Button */
@@ -122,19 +130,21 @@
 
 .importLabel {
   display: inline-block;
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-primary);
-  transition: all var(--transition-fast);
+  transition: all var(--transition-normal);
+  cursor: pointer;
 }
 
 .importLabel:hover {
   background: var(--color-bg-hover);
   border-color: var(--color-accent-secondary);
+  transform: translateY(-2px);
 }
 
 .importStatus {
@@ -142,12 +152,12 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   background: var(--color-bg-tertiary);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-light);
 }
 
 /* Danger Card */
 .dangerCard {
-  border-color: var(--color-error);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 /* About */
@@ -158,9 +168,10 @@
 }
 
 .about h3 {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-1);
+  font-weight: 700;
 }
 
 .about p {
@@ -168,16 +179,22 @@
 }
 
 .version {
-  margin-top: var(--spacing-2);
+  margin-top: var(--spacing-3);
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
+  padding: var(--spacing-1) var(--spacing-3);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  display: inline-block;
 }
 
 /* Modal */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,22 +203,26 @@
 }
 
 .modalContent {
-  background: var(--color-bg-card);
-  border-radius: var(--radius-xl);
+  background: var(--color-bg-card-solid);
+  border-radius: var(--radius-2xl);
   padding: var(--spacing-6);
   max-width: 400px;
   width: 100%;
   text-align: center;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
 }
 
 .modalContent h3 {
   font-size: var(--font-size-xl);
   margin-bottom: var(--spacing-3);
+  font-weight: 700;
 }
 
 .modalContent p {
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-6);
+  line-height: 1.6;
 }
 
 .modalActions {
@@ -212,24 +233,40 @@
 
 /* Mastery Info Box */
 .masteryInfo {
-  padding: var(--spacing-4);
+  padding: var(--spacing-5);
   background: var(--color-bg-tertiary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   margin-bottom: var(--spacing-4);
+  border: 1px solid var(--color-border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.masteryInfo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
 }
 
 .masteryInfo h3 {
   font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--color-accent-primary);
-  margin-bottom: var(--spacing-2);
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-3);
 }
 
 .masteryInfo p {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: 1.6;
-  margin-bottom: var(--spacing-2);
+  margin-bottom: var(--spacing-3);
 }
 
 .masteryInfo ul {
@@ -240,7 +277,8 @@
 }
 
 .masteryInfo li {
-  margin-bottom: var(--spacing-1);
+  margin-bottom: var(--spacing-2);
+  line-height: 1.5;
 }
 
 /* Slider Input */
@@ -248,21 +286,24 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--spacing-1);
-  min-width: 120px;
+  gap: var(--spacing-2);
+  min-width: 130px;
 }
 
 .sliderValue {
   font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-accent-secondary);
+  font-weight: 700;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   min-width: 50px;
   text-align: right;
 }
 
 .slider {
   width: 100%;
-  height: 6px;
+  height: 8px;
   appearance: none;
   background: var(--color-bg-tertiary);
   border-radius: var(--radius-full);
@@ -272,28 +313,33 @@
 
 .slider::-webkit-slider-thumb {
   appearance: none;
-  width: 18px;
-  height: 18px;
-  background: var(--color-accent-secondary);
+  width: 20px;
+  height: 20px;
+  background: var(--gradient-secondary);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md), var(--shadow-glow-violet);
+  transition: transform var(--transition-fast);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
 }
 
 .slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   background: var(--color-accent-secondary);
   border-radius: 50%;
   cursor: pointer;
   border: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 /* Reset to Defaults Button */
 .resetDefaultsBtn {
   padding: var(--spacing-4);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-light);
 }
 
 .resetDefaultsBtn button {

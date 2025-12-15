@@ -1,21 +1,60 @@
 .card {
-  border-radius: var(--radius-xl);
-  transition: all var(--transition-fast);
+  border-radius: var(--radius-2xl);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient overlay */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-card);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
 /* Variants */
 .default {
   background: var(--color-bg-card);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid var(--color-border-light);
+}
+
+.default::before {
+  opacity: 1;
 }
 
 .elevated {
   background: var(--color-bg-card);
-  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+}
+
+.elevated::before {
+  opacity: 1;
 }
 
 .outlined {
   background: transparent;
   border: 1px solid var(--color-border);
+}
+
+.outlined:hover {
+  border-color: var(--color-accent-secondary);
+}
+
+/* Glass variant */
+.glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid var(--color-border-light);
 }
 
 /* Padding */
@@ -24,15 +63,15 @@
 }
 
 .padding-sm {
-  padding: var(--spacing-3);
-}
-
-.padding-md {
   padding: var(--spacing-4);
 }
 
+.padding-md {
+  padding: var(--spacing-5);
+}
+
 .padding-lg {
-  padding: var(--spacing-6);
+  padding: var(--spacing-8);
 }
 
 /* Clickable */
@@ -41,22 +80,30 @@
 }
 
 .clickable:hover {
-  background: var(--color-bg-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-violet);
+  border-color: var(--color-accent-secondary);
+}
+
+.clickable:active {
+  transform: translateY(-2px);
 }
 
 /* Header */
 .header {
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
 }
 
 /* Title */
 .title {
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
+  letter-spacing: -0.01em;
 }
 
 /* Content */
 .content {
   color: var(--color-text-secondary);
+  line-height: 1.6;
 }

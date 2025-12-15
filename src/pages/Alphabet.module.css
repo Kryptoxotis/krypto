@@ -12,6 +12,7 @@
 .title {
   font-size: var(--font-size-2xl);
   margin-bottom: var(--spacing-1);
+  font-weight: 700;
 }
 
 .subtitle {
@@ -20,36 +21,38 @@
   margin-bottom: var(--spacing-3);
 }
 
+/* View Toggle */
 .viewToggle {
   display: flex;
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: var(--spacing-1);
   margin-bottom: var(--spacing-4);
+  border: 1px solid var(--color-border-light);
 }
 
 .toggleButton {
   flex: 1;
   padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-secondary);
   background: transparent;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-normal);
 }
 
 .toggleButton.active {
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-  box-shadow: var(--shadow-sm);
+  background: var(--gradient-secondary);
+  color: white;
+  box-shadow: var(--shadow-md), var(--shadow-glow-violet);
 }
 
 /* Grid View */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
   margin-bottom: var(--spacing-6);
 }
 
@@ -60,22 +63,46 @@
   justify-content: center;
   padding: var(--spacing-3);
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-normal);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.letterCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 200, 87, 0.1) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
 .letterCard:hover {
-  border-color: var(--color-accent-secondary);
-  background: var(--color-bg-hover);
+  border-color: var(--color-accent-primary);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
+}
+
+.letterCard:hover::before {
+  opacity: 1;
 }
 
 .letterGreek {
   font-family: var(--font-greek);
   font-size: var(--font-size-2xl);
-  color: var(--color-accent-primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .letterLower {
@@ -83,12 +110,17 @@
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   margin-top: var(--spacing-1);
+  position: relative;
+  z-index: 1;
 }
 
 .letterName {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   margin-top: var(--spacing-1);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
 }
 
 /* Study Mode */
@@ -106,63 +138,99 @@
 .studyPosition {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
+  font-weight: 600;
+  padding: var(--spacing-1) var(--spacing-3);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
 }
 
 .studyCard {
   background: var(--color-bg-card);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-6);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-8);
   text-align: center;
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative glow behind study card */
+.studyCard::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 200, 87, 0.2) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .letterDisplay {
   margin-bottom: var(--spacing-6);
+  position: relative;
+  z-index: 1;
 }
 
 .studyUpper {
   font-family: var(--font-greek);
-  font-size: 6rem;
-  color: var(--color-accent-primary);
+  font-size: 7rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   display: block;
   line-height: 1;
+  filter: drop-shadow(0 0 30px rgba(255, 200, 87, 0.3));
 }
 
 .studyLower {
   font-family: var(--font-greek);
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--color-text-secondary);
-  margin-top: var(--spacing-2);
+  margin-top: var(--spacing-3);
   display: block;
 }
 
 .finalForm {
   color: var(--color-text-muted);
+  font-size: var(--font-size-xl);
 }
 
 .letterInfo {
   text-align: left;
+  position: relative;
+  z-index: 1;
 }
 
 .studyName {
   font-size: var(--font-size-2xl);
   margin-bottom: var(--spacing-4);
   text-align: center;
+  font-weight: 700;
 }
 
 .phonetic,
 .note {
   display: flex;
-  gap: var(--spacing-2);
-  padding: var(--spacing-3);
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
   background: var(--color-bg-tertiary);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-3);
+  border: 1px solid var(--color-border-light);
 }
 
 .label {
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  min-width: 50px;
+  font-weight: 700;
+  color: var(--color-accent-tertiary);
+  min-width: 55px;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .value {
@@ -173,4 +241,7 @@
 .actions {
   position: sticky;
   bottom: calc(var(--nav-height) + var(--spacing-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
 }

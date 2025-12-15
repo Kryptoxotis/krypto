@@ -30,19 +30,26 @@
 
 .readyIcon {
   font-family: var(--font-greek);
-  font-size: 4rem;
-  color: var(--color-accent-primary);
+  font-size: 5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: var(--spacing-4);
+  filter: drop-shadow(0 0 30px rgba(255, 200, 87, 0.3));
 }
 
 .readyTitle {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   margin-bottom: var(--spacing-2);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .readyDesc {
   color: var(--color-text-muted);
   margin-bottom: var(--spacing-6);
+  line-height: 1.6;
 }
 
 .quizTypes {
@@ -54,18 +61,25 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  padding: var(--spacing-3);
+  padding: var(--spacing-4);
   background: var(--color-bg-card);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-3);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
 
 .typeIcon {
   font-family: var(--font-greek);
-  color: var(--color-accent-primary);
-  min-width: 60px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  min-width: 65px;
+  font-weight: 600;
 }
 
 .backButton {
@@ -73,14 +87,16 @@
 }
 
 .practiceNote {
-  padding: var(--spacing-3) var(--spacing-4);
-  background: var(--color-accent-secondary);
-  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%);
+  padding: var(--spacing-4);
+  background: var(--gradient-secondary);
   color: white;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-4);
   width: 100%;
+  font-weight: 500;
+  box-shadow: var(--shadow-md), var(--shadow-glow-violet);
+  text-align: center;
 }
 
 /* Quiz Header */
@@ -89,6 +105,12 @@
   align-items: center;
   gap: var(--spacing-3);
   margin-bottom: var(--spacing-6);
+  padding: var(--spacing-3);
+  background: var(--color-bg-card);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
 }
 
 .progressBar {
@@ -98,8 +120,9 @@
 .questionCount {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  min-width: 40px;
+  min-width: 45px;
   text-align: right;
+  font-weight: 600;
 }
 
 /* Question */
@@ -114,15 +137,20 @@
   color: var(--color-text-secondary);
   text-align: center;
   margin-bottom: var(--spacing-4);
+  font-weight: 500;
 }
 
 .promptDisplay {
   font-family: var(--font-greek);
   font-size: var(--font-size-greek);
-  color: var(--color-accent-primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
   margin-bottom: var(--spacing-8);
   line-height: 1;
+  filter: drop-shadow(0 0 30px rgba(255, 200, 87, 0.25));
 }
 
 .options {
@@ -134,23 +162,27 @@
 /* Feedback */
 .feedback {
   margin-top: var(--spacing-6);
-  padding: var(--spacing-4);
+  padding: var(--spacing-5);
   background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
 }
 
 .feedbackMessage {
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: var(--spacing-3);
   text-align: center;
+  font-size: var(--font-size-lg);
 }
 
 .feedbackMessage.correct {
-  color: var(--color-success);
+  color: var(--color-success-light);
 }
 
 .feedbackMessage.incorrect {
-  color: var(--color-error);
+  color: var(--color-error-light);
 }
 
 .feedbackInfo {
@@ -163,18 +195,24 @@
 
 .feedbackGreek {
   font-family: var(--font-greek);
-  font-size: var(--font-size-xl);
-  color: var(--color-accent-primary);
+  font-size: var(--font-size-2xl);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .feedbackName {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
 }
 
 .feedbackSound {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
 }
 
 /* Results Screen */
@@ -189,42 +227,67 @@
 }
 
 .resultIcon {
-  font-size: 4rem;
+  font-size: 5rem;
   margin-bottom: var(--spacing-4);
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
 }
 
 .resultTitle {
-  font-size: var(--font-size-2xl);
-  margin-bottom: var(--spacing-6);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-4);
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .resultCard {
   width: 100%;
   margin-bottom: var(--spacing-6);
+  position: relative;
+  overflow: hidden;
+}
+
+.resultCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
 }
 
 .resultStats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-4);
+  position: relative;
+  z-index: 1;
 }
 
 .resultStat {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: var(--spacing-2);
 }
 
 .resultValue {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-accent-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .resultLabel {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
 }
 
 .resultActions {
