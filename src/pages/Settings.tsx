@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { Button, Card } from '../components/ui';
 import { useSettings, defaultMasterySettings } from '../hooks/useSettings';
 import { useProgress } from '../hooks/useProgress';
+import { useAuth } from '../contexts/AuthContext';
 import { exportAllData, importAllData } from '../lib/storage';
 import styles from './Settings.module.css';
 
 export function Settings() {
   const { settings, toggleDarkMode, togglePhoneticGuide, setQuizSize, updateMastery, resetMasteryToDefaults } = useSettings();
   const { resetAll } = useProgress();
+  const { user, signOut } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
@@ -54,6 +56,21 @@ export function Settings() {
       <header className={styles.header}>
         <h1>Settings</h1>
       </header>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Account</h2>
+        <Card variant="default" padding="none">
+          <div className={styles.settingItem}>
+            <div className={styles.settingInfo}>
+              <span className={styles.settingLabel}>{user?.email || 'Not signed in'}</span>
+              <span className={styles.settingDesc}>Signed in with {user?.app_metadata?.provider || 'email'}</span>
+            </div>
+            <Button variant="secondary" size="sm" onClick={signOut}>
+              Sign Out
+            </Button>
+          </div>
+        </Card>
+      </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Appearance</h2>
