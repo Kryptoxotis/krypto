@@ -38,13 +38,13 @@ function AppContent() {
       <main className="main-content">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/alphabet" element={<Alphabet />} />
-            <Route path="/alphabet/quiz" element={<AlphabetQuiz />} />
-            <Route path="/parsing" element={<Parsing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/alphabet" element={<ProtectedRoute><Alphabet /></ProtectedRoute>} />
+            <Route path="/alphabet/quiz" element={<ProtectedRoute><AlphabetQuiz /></ProtectedRoute>} />
+            <Route path="/parsing" element={<ProtectedRoute><Parsing /></ProtectedRoute>} />
             <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/login" element={<Login />} />
           </Routes>
         </AnimatePresence>
       </main>
